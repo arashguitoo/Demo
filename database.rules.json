@@ -77,6 +77,12 @@
             ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid"
           }
         },
+        "karteikasten": {
+          "$stid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid",
+            ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid"
+          }
+        },
         "live": {
           ".read": "auth != null && (root.child('users/' + auth.uid + '/schoolId').val() === $sid || (auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid))",
           "$raum": {

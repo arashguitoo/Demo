@@ -64,6 +64,7 @@ regeln = {
           },
         }},
         "rueckmeldung": {"$stid": {".read": f"{TN} && {TN_ID} === $stid"}},
+        "karteikasten": {"$stid": {".read": f"{TN} && {TN_ID} === $stid", ".write": f"{TN} && {TN_ID} === $stid"}},
         "live": {
           ".read": f"auth != null && ({LK} || {TN})",
           "$raum": {

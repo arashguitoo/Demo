@@ -1,0 +1,247 @@
+export default {
+  id: "ws-beruf",
+  titel: "Wortfeld Betrieb",
+  niveau: "B2",
+  module: [
+    {
+      id: "besprechung",
+      titel: "Besprechung und Protokoll",
+      fertigkeit: "wortschatz",
+      aufgaben: [
+        {
+          typ: "paare",
+          anweisung: "Was bedeutet der Begriff?",
+          paare: [
+            ["die Tagesordnung", "die Liste der Themen einer Sitzung"],
+            ["der Beschluss", "eine gemeinsame Entscheidung"],
+            ["die Moderation", "die Leitung des Gesprächs"],
+            ["das Protokoll", "die schriftliche Zusammenfassung der Ergebnisse"],
+            ["der Tagesordnungspunkt", "ein einzelnes Thema auf der Liste"],
+            ["die Vertagung", "die Verschiebung eines Themas auf später"],
+          ],
+        },
+        {
+          typ: "luecke",
+          satz: "Können wir diesen Punkt auf die nächste Sitzung ___?",
+          optionen: ["vertagen", "vertragen", "verlangen"],
+          erklaerung: "Einen Punkt vertagen = ihn später besprechen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Frau Becker hat sich bereit erklärt, heute das Protokoll zu ___.",
+          optionen: ["führen", "halten", "leiten"],
+          erklaerung: "Die feste Verbindung lautet: Protokoll führen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Herr Yılmaz kann nicht kommen, er hat sich für die Sitzung ___.",
+          optionen: ["entschuldigt", "abgesagt", "verabschiedet"],
+          erklaerung: "sich (für eine Sitzung) entschuldigen = mitteilen, dass man fehlt.",
+        },
+        {
+          typ: "mc",
+          frage: `Was bedeutet: „Wir halten fest, dass …“?`,
+          optionen: [
+            "Wir schreiben als Ergebnis auf, dass …",
+            "Wir streiten darüber, ob …",
+            "Wir wissen noch nicht, ob …",
+            "Wir vergessen, dass …",
+          ],
+          erklaerung: "festhalten = als Ergebnis notieren.",
+        },
+        {
+          typ: "mc",
+          frage: "Wer ist für eine Aufgabe zuständig, wenn im Protokoll steht: „Verantwortlich: T. Haddad“?",
+          optionen: [
+            "Tarek Haddad muss die Aufgabe erledigen.",
+            "Tarek Haddad hat die Sitzung geleitet.",
+            "Tarek Haddad war nicht anwesend.",
+            "Tarek Haddad hat das Protokoll geschrieben.",
+          ],
+          erklaerung: "Verantwortlich = die Person, die sich um die Aufgabe kümmert.",
+        },
+        {
+          typ: "luecke",
+          satz: "Ich möchte kurz etwas zu Punkt zwei ___.",
+          optionen: ["ergänzen", "erledigen", "erhalten"],
+          erklaerung: "etwas ergänzen = noch etwas hinzufügen.",
+        },
+        {
+          typ: "sortieren",
+          anweisung: "Wann sagt man das in einer Besprechung?",
+          gruppen: {
+            "Beginn": ["Ich begrüße Sie alle.", "Kommen wir zum ersten Punkt.", "Heute haben wir drei Themen."],
+            "Diskussion": ["Darf ich kurz unterbrechen?", "Da bin ich anderer Meinung.", "Ich sehe das genauso."],
+            "Ende": ["Halten wir fest:", "Vielen Dank für Ihre Beiträge.", "Die nächste Sitzung ist am Montag."],
+          },
+        },
+        {
+          typ: "mc",
+          frage: "Was ist ein Beschluss?",
+          optionen: [
+            "eine Entscheidung, auf die sich die Gruppe geeinigt hat",
+            "der Schluss eines Protokolls",
+            "eine Pause während der Sitzung",
+            "eine Einladung zur Besprechung",
+          ],
+          erklaerung: "Etwas beschließen = gemeinsam entscheiden.",
+        },
+      ],
+    },
+    {
+      id: "arbeitsschutz",
+      titel: "Arbeitsschutz",
+      fertigkeit: "wortschatz",
+      aufgaben: [
+        {
+          typ: "paare",
+          anweisung: "Was schützt wovor?",
+          paare: [
+            ["der Gehörschutz", "vor Lärm"],
+            ["die Schutzbrille", "vor Splittern und Spritzern"],
+            ["der Helm", "vor herabfallenden Teilen"],
+            ["die Sicherheitsschuhe", "vor schweren Gegenständen auf den Füßen"],
+            ["die Warnweste", "vor Unfällen mit Fahrzeugen"],
+            ["die Schutzhandschuhe", "vor Schnitten an den Händen"],
+          ],
+        },
+        {
+          typ: "luecke",
+          satz: "Kleine Verletzungen müssen ins ___ eingetragen werden.",
+          optionen: ["Verbandbuch", "Tagebuch", "Kassenbuch"],
+          erklaerung: "Im Verbandbuch dokumentiert man Erste-Hilfe-Leistungen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Im Brandfall benutzen Sie die gekennzeichneten ___.",
+          optionen: ["Fluchtwege", "Fahrwege", "Umwege"],
+          erklaerung: "Fluchtwege führen im Notfall sicher nach draußen.",
+        },
+        {
+          typ: "mc",
+          frage: "Wer ist die Fachkraft für Arbeitssicherheit?",
+          optionen: [
+            "eine Person, die den Betrieb zu Sicherheit und Gesundheit berät",
+            "die Person, die die Löhne berechnet",
+            "eine Ärztin, die Krankmeldungen schreibt",
+            "der Hausmeister, der Glühbirnen wechselt",
+          ],
+          erklaerung: "Sie berät den Arbeitgeber und prüft Gefahren am Arbeitsplatz.",
+        },
+        {
+          typ: "luecke",
+          satz: "Ein Unfall auf dem Weg zur Arbeit heißt ___.",
+          optionen: ["Wegeunfall", "Arbeitsweg", "Fahrschaden"],
+          erklaerung: "Der Wegeunfall ist über die gesetzliche Unfallversicherung versichert.",
+        },
+        {
+          typ: "mc",
+          frage: "Was ist eine Gefährdungsbeurteilung?",
+          optionen: [
+            "eine Prüfung, welche Gefahren es an einem Arbeitsplatz gibt",
+            "ein Zeugnis über die Leistung eines Mitarbeiters",
+            "eine Strafe für einen Verstoß gegen Regeln",
+            "die Bewertung eines Bewerbungsgesprächs",
+          ],
+          erklaerung: "Der Arbeitgeber muss Gefahren beurteilen und Schutzmaßnahmen festlegen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Bevor Sie die Maschine reinigen, müssen Sie sie vom Strom ___.",
+          optionen: ["trennen", "teilen", "lösen"],
+          erklaerung: "Ein Gerät vom Strom trennen = den Stecker ziehen oder abschalten.",
+        },
+        {
+          typ: "sortieren",
+          anweisung: "Was gehört wohin?",
+          gruppen: {
+            "Schutzausrüstung": ["Helm", "Gehörschutz", "Schutzbrille", "Warnweste"],
+            "Im Notfall": ["Feuerlöscher", "Notausgang", "Sammelplatz", "Ersthelferin"],
+          },
+        },
+      ],
+    },
+    {
+      id: "kunden",
+      titel: "Kundenkontakt",
+      fertigkeit: "wortschatz",
+      aufgaben: [
+        {
+          typ: "paare",
+          anweisung: "Was bedeutet der Begriff?",
+          paare: [
+            ["die Reklamation", "eine Beschwerde über eine fehlerhafte Ware"],
+            ["das Angebot", "ein Preisvorschlag für eine Leistung"],
+            ["die Lieferfrist", "die Zeit, bis die Ware ankommt"],
+            ["die Rückerstattung", "das Zurückzahlen des Geldes"],
+            ["der Kostenvoranschlag", "eine Schätzung der Kosten vor der Arbeit"],
+            ["die Kulanz", "ein Entgegenkommen ohne Pflicht"],
+          ],
+        },
+        {
+          typ: "luecke",
+          satz: "Wir bitten, die Verzögerung zu ___.",
+          optionen: ["entschuldigen", "entscheiden", "entlassen"],
+          erklaerung: "Feste Formel: Wir bitten, die Verzögerung zu entschuldigen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Selbstverständlich ___ wir Ihnen die defekte Ware kostenlos.",
+          optionen: ["ersetzen", "besetzen", "versetzen"],
+          erklaerung: "Etwas ersetzen = es durch etwas Neues austauschen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Ich leite Ihr ___ gern an die zuständige Kollegin weiter.",
+          optionen: ["Anliegen", "Anlegen", "Angebot"],
+          erklaerung: "Das Anliegen = die Bitte oder Frage des Kunden.",
+        },
+        {
+          typ: "mc",
+          frage: "Ein Kunde ist verärgert. Welche Reaktion ist professionell?",
+          optionen: [
+            "Ich verstehe Ihren Ärger. Lassen Sie uns gemeinsam eine Lösung finden.",
+            "Das ist nicht mein Problem.",
+            "Da müssen Sie sich woanders beschweren.",
+            "Beruhigen Sie sich erst mal!",
+          ],
+          erklaerung: "Verständnis zeigen und eine Lösung anbieten.",
+        },
+        {
+          typ: "mc",
+          frage: `Was bedeutet: „Wir kommen Ihnen gern entgegen“?`,
+          optionen: [
+            "Wir machen Ihnen ein freiwilliges Angebot, zum Beispiel einen Rabatt.",
+            "Wir holen Sie am Eingang ab.",
+            "Wir lehnen Ihre Beschwerde ab.",
+            "Wir rufen Sie später zurück.",
+          ],
+          erklaerung: "jemandem entgegenkommen = Kompromiss oder Vorteil anbieten.",
+        },
+        {
+          typ: "luecke",
+          satz: "Die Ware wird innerhalb von drei Werktagen ___.",
+          optionen: ["zugestellt", "zugestimmt", "zugesagt"],
+          erklaerung: "zustellen = liefern, bringen.",
+        },
+        {
+          typ: "luecke",
+          satz: "Für Rückfragen stehe ich Ihnen gern zur ___.",
+          optionen: ["Verfügung", "Vermittlung", "Verbindung"],
+          erklaerung: "Feste Wendung: jemandem zur Verfügung stehen.",
+        },
+        {
+          typ: "mc",
+          frage: "Was ist eine Gutschrift?",
+          optionen: [
+            "ein Betrag, den der Kunde zurückbekommt oder beim nächsten Kauf verrechnet",
+            "eine schriftliche Bewertung im Internet",
+            "eine Unterschrift unter dem Vertrag",
+            "eine Mahnung für eine offene Rechnung",
+          ],
+          erklaerung: "Eine Gutschrift wird dem Kundenkonto gutgeschrieben.",
+        },
+      ],
+    },
+  ],
+};

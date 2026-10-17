@@ -48,7 +48,7 @@ export const PRUEFUNG_DATEI = {
 };
 
 /** Sonderoberflächen, die schon fertig sind (wird beim Bauen ergänzt) */
-export const SONDER_BEREIT = new Set(["gs-whatsapp", "gs-whatsapp-b2", "lv-quizduell"]);
+export const SONDER_BEREIT = new Set(["gs-whatsapp", "gs-whatsapp-b2", "lv-quizduell", "ws-karteikasten"]);
 
 export const route = (id) => (SONDER[id] ? SONDER[id] : PRUEFUNGEN.has(id) ? "#/pruefung/" + id : "#/paket/" + id);
 
