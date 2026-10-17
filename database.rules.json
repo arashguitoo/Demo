@@ -1,0 +1,105 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/schoolId').val() === data.child('schoolId').val())",
+        ".write": "auth != null && auth.uid === $uid && !data.exists() && newData.exists() && (!root.child('schools/' + newData.child('schoolId').val() + '/meta').exists() || root.child('schools/' + newData.child('schoolId').val() + '/einladungen/' + auth.token.email.toLowerCase().replace('.', '_')).exists())",
+        ".validate": "newData.hasChildren(['schoolId', 'name', 'rolle'])",
+        "rolle": {
+          ".validate": "newData.val() === 'lehrkraft' || (newData.val() === 'admin' && !root.child('schools/' + newData.parent().child('schoolId').val() + '/meta').exists())"
+        }
+      }
+    },
+    "codes": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/schoolId').val() === newData.child('schoolId').val() || (!newData.exists() && root.child('users/' + auth.uid + '/schoolId').val() === data.child('schoolId').val()))"
+      }
+    },
+    "sessions": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && (!newData.exists() || (root.child('codes/' + newData.child('code').val() + '/studentId').val() === newData.child('studentId').val() && root.child('codes/' + newData.child('code').val() + '/schoolId').val() === newData.child('schoolId').val()))"
+      }
+    },
+    "schools": {
+      "$sid": {
+        ".read": "auth != null && root.child('users/' + auth.uid + '/schoolId').val() === $sid",
+        ".write": "auth != null && root.child('users/' + auth.uid + '/schoolId').val() === $sid",
+        "meta": {
+          ".read": "auth != null && (root.child('users/' + auth.uid + '/schoolId').val() === $sid || (auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid))",
+          ".write": "auth != null && ((root.child('users/' + auth.uid + '/schoolId').val() === $sid && root.child('users/' + auth.uid + '/rolle').val() === 'admin') || (!data.exists() && root.child('users/' + auth.uid + '/schoolId').val() === $sid))"
+        },
+        "teachers": {
+          "$uid": {
+            ".write": "auth != null && ((root.child('users/' + auth.uid + '/schoolId').val() === $sid && root.child('users/' + auth.uid + '/rolle').val() === 'admin') || (auth.uid === $uid && root.child('users/' + auth.uid + '/schoolId').val() === $sid))"
+          }
+        },
+        "einladungen": {
+          ".write": "auth != null && root.child('users/' + auth.uid + '/schoolId').val() === $sid && root.child('users/' + auth.uid + '/rolle').val() === 'admin'"
+        },
+        "klassen": {
+          "$kid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('schools/' + $sid + '/students/' + root.child('sessions/' + auth.uid).child('studentId').val() + '/klasseId').val() === $kid"
+          }
+        },
+        "students": {
+          "$stid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid"
+          }
+        },
+        "klassenbuch": {
+          "$kid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('schools/' + $sid + '/students/' + root.child('sessions/' + auth.uid).child('studentId').val() + '/klasseId').val() === $kid"
+          }
+        },
+        "anwesenheit": {
+          "$kid": {
+            "$tag": {
+              "$stid": {
+                ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid",
+                ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid && root.child('schools/' + $sid + '/students/' + root.child('sessions/' + auth.uid).child('studentId').val() + '/klasseId').val() === $kid && !data.exists() && newData.child('bestaetigt').val() === false && newData.child('status').val() === 'da'"
+              }
+            }
+          }
+        },
+        "ergebnisse": {
+          "$stid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid",
+            "$eid": {
+              ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid && !data.exists()",
+              ".validate": "newData.hasChildren(['aktivitaet', 'punkte', 'max', 'ts']) && newData.child('punkte').isNumber() && newData.child('max').isNumber() && newData.child('punkte').val() <= newData.child('max').val()"
+            }
+          }
+        },
+        "rueckmeldung": {
+          "$stid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid"
+          }
+        },
+        "live": {
+          ".read": "auth != null && (root.child('users/' + auth.uid + '/schoolId').val() === $sid || (auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid))",
+          "$raum": {
+            "spieler": {
+              "$uid": {
+                ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && auth.uid === $uid"
+              }
+            },
+            "antworten": {
+              "$frage": {
+                "$uid": {
+                  ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && auth.uid === $uid && !data.exists()"
+                }
+              }
+            },
+            "chat": {
+              "$nid": {
+                ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && !data.exists()"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

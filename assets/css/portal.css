@@ -1,0 +1,69 @@
+/* Startportal */
+.portal-kopf { max-width: 1180px; margin: 0 auto; padding: 1.1rem clamp(1rem, 3vw, 2rem); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.portal-kopf nav { display: flex; gap: .3rem; }
+
+.held { max-width: 1180px; margin: 0 auto; padding: 1.5rem clamp(1rem, 3vw, 2rem) 3.5rem; display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: start; }
+@media (max-width: 920px) { .held { grid-template-columns: 1fr; } }
+.held h1 { font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3rem); line-height: 1.08; letter-spacing: -.025em; margin: 1.8rem 0 .9rem; max-width: 18ch; }
+.held .einleitung { font-size: 1.12rem; color: var(--tinte-2); max-width: 46ch; }
+
+/* Satzklammer-Bühne */
+.buehne { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 20px; padding: 1.4rem 1.4rem 1.1rem; }
+.buehne-kopf { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+.buehne-kopf p { margin: 0; color: var(--tinte-2); font-size: .95rem; }
+.niveau-wahl { display: inline-flex; gap: .3rem; }
+.niveau-wahl button { font: inherit; font-weight: 800; font-size: .85rem; border: 1.5px solid var(--linie); background: var(--flaeche); color: var(--tinte-2); border-radius: 6px; padding: .2rem .55rem; cursor: pointer; }
+.niveau-wahl button[aria-pressed=true] { color: #fff; border-color: transparent; }
+.niveau-wahl button[aria-pressed=true][data-n=A1] { background: var(--a1); }
+.niveau-wahl button[aria-pressed=true][data-n=A2] { background: var(--a2); }
+.niveau-wahl button[aria-pressed=true][data-n=B1] { background: var(--b1); }
+.niveau-wahl button[aria-pressed=true][data-n=B2] { background: var(--b2); }
+
+.satz { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .55rem .5rem; min-height: 7.2rem; padding-bottom: 2.1rem; position: relative; }
+.kachel { font-size: clamp(1.05rem, .85rem + 1vw, 1.45rem); font-weight: 700; padding: .45em .7em; border-radius: 9px; background: var(--papier); border: 1.5px solid var(--linie); white-space: nowrap; }
+.kachel.verb { background: var(--petrol); border-color: var(--petrol); color: #fff; transform: translateY(-.55rem); }
+.kachel.mitte { background: #fff; border-style: dashed; color: var(--tinte-2); }
+.klammer-linie { position: absolute; height: 14px; border: 2.5px solid var(--petrol); border-top: 0; border-radius: 0 0 10px 10px; bottom: .55rem; opacity: .85; pointer-events: none; transition: left .35s ease, width .35s ease; }
+.buehne-fuss { display: flex; justify-content: space-between; gap: 1rem; color: var(--tinte-3); font-size: .86rem; border-top: 1px solid var(--linie-2); padding-top: .8rem; }
+.einflug .kachel.mitte { animation: einflug .55s cubic-bezier(.2,.8,.2,1) both; }
+.einflug .kachel.mitte:nth-of-type(3) { animation-delay: .08s; }
+.einflug .kachel.verb { animation: hoch .45s ease both; }
+@keyframes einflug { from { opacity: 0; transform: translateY(1.2rem) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes hoch { from { transform: none; } to { transform: translateY(-.55rem); } }
+
+/* Anmeldung */
+.anmeldung { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 20px; padding: 1.5rem; box-shadow: var(--schatten); position: sticky; top: 1rem; }
+.anmeldung h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+.wahl { display: grid; grid-template-columns: 1fr 1fr; background: var(--papier); border-radius: 12px; padding: 4px; margin-bottom: 1.2rem; }
+.wahl button { font: inherit; font-weight: 750; border: 0; background: transparent; border-radius: 9px; padding: .6rem; color: var(--tinte-2); cursor: pointer; }
+.wahl button[aria-selected=true] { background: var(--flaeche); color: var(--tinte); box-shadow: 0 1px 3px rgba(24,38,47,.12); }
+.code-feld { font-size: 1.5rem !important; letter-spacing: .25em; text-align: center; font-weight: 800 !important; text-transform: uppercase; }
+.anmeldung .btn.primaer { width: 100%; min-height: 48px; }
+.zugaenge { margin-top: 1.3rem; padding-top: 1.1rem; border-top: 1px dashed var(--linie); }
+.zugaenge h3 { font-size: .95rem; margin-bottom: .6rem; }
+.zugang { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .45rem 0; font-size: .92rem; }
+.zugang + .zugang { border-top: 1px solid var(--linie-2); }
+.zugang b { display: block; }
+.zugang span { color: var(--tinte-2); }
+.angemeldet { display: grid; gap: .8rem; }
+
+/* Bereiche */
+.band { max-width: 1180px; margin: 0 auto; padding: 3rem clamp(1rem, 3vw, 2rem); }
+.band > h2 { font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); max-width: 26ch; margin-bottom: .5rem; }
+.band > p.leise { max-width: 60ch; margin-bottom: 2rem; }
+.bereich-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 0 3rem; border-top: 1px solid var(--linie); }
+.bereich-eintrag { display: grid; grid-template-columns: 42px 1fr; gap: .9rem; padding: 1.2rem 0; border-bottom: 1px solid var(--linie); }
+.bereich-eintrag .ic-rund { width: 42px; height: 42px; border-radius: 12px; background: var(--petrol-hell); color: var(--petrol); display: grid; place-items: center; }
+.bereich-eintrag h3 { margin: .1rem 0 .25rem; }
+.bereich-eintrag p { margin: 0; color: var(--tinte-2); font-size: .97rem; }
+
+.lehrkraft-band { background: var(--tinte); color: #e9eef1; }
+.lehrkraft-band .band > h2 { color: #fff; }
+.lehrkraft-band .leise { color: #a9b8c1; }
+.drei { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 2rem; }
+.drei h3 { color: #fff; margin-bottom: .35rem; }
+.drei p { color: #b9c6ce; margin: 0; }
+.drei .ic { color: #8fd0cc; margin-bottom: .5rem; width: 28px; height: 28px; }
+
+.portal-fuss { max-width: 1180px; margin: 0 auto; padding: 1.6rem clamp(1rem, 3vw, 2rem) 2.5rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: var(--tinte-3); font-size: .88rem; }
+@media (max-width: 920px) { .anmeldung { order: -1; position: static; } .held h1 { margin-top: 1.2rem; } }
