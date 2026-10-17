@@ -6,13 +6,13 @@ import { spielen } from "../spiel/engine.js";
 
 export function sterne(p) { return p >= 90 ? 3 : p >= 70 ? 2 : p >= 50 ? 1 : 0; }
 
-export function ergebnisBild({ punkte, max, titel, text, aktionen }) {
+export function ergebnisBild({ punkte, max, titel, text, aktionen, einheit = "richtig" }) {
   const p = prozent(punkte, max);
   const s = sterne(p);
   return h("div.ergebnis",
     h("div.ergebnis-sterne", { "aria-label": `${s} von 3 Sternen` }, [0, 1, 2].map((i) => h("span" + (i < s ? ".an" : ""), { style: { "--i": i } }, "★"))),
     h("h2", titel || (p >= 90 ? "Ausgezeichnet!" : p >= 70 ? "Gut gemacht!" : p >= 50 ? "Geschafft!" : "Weiter üben!")),
-    h("p.ergebnis-zahl", h("b", `${punkte} von ${max}`), ` richtig (${p} %)`),
+    h("p.ergebnis-zahl", h("b", `${punkte} von ${max}`), ` ${einheit} (${p} %)`),
     text ? h("p.leise", text) : null,
     h("div.reihe", { style: { justifyContent: "center" } }, aktionen));
 }

@@ -77,6 +77,14 @@
             ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid"
           }
         },
+        "abgaben": {
+          "$stid": {
+            ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid",
+            "$aid": {
+              ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid && !data.exists()"
+            }
+          }
+        },
         "karteikasten": {
           "$stid": {
             ".read": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && root.child('sessions/' + auth.uid).child('studentId').val() === $stid",

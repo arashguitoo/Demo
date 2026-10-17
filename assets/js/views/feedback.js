@@ -13,7 +13,7 @@ export default async function (ctx) {
   const kid = s.klasseId;
   const [klasse, buch] = await Promise.all([store.get(`${S}/klassen/${kid}`), store.get(`${S}/klassenbuch/${kid}`)]);
   const box = h("div");
-  let erg = [], anwKlasse = {}, rm = null;
+  let erg = [], anwKlasse = {}, rm = null, abgabenListe = [];
 
   function zeichne() {
     const gestern = isoTag(new Date(Date.now() - 864e5));
@@ -56,6 +56,7 @@ export default async function (ctx) {
         prog ? prognoseBox(prog, du) : h("section.flaeche", h("h2", "Prüfung"), h("p.leise", "Für diese Klasse ist kein Prüfungsziel eingetragen."))),
 
       h("section.abschnitt", h("h2", du ? "Rückmeldung deiner Lehrkraft" : "Rückmeldung"), rueckmeldung(du)),
+      abgabenListe.length ? h("section.abschnitt", h("h2", du ? "Meine Texte" : "Geschriebene Texte"), abgabenAnsicht(du)) : null,
 
       h("div.raster-2.abschnitt",
         h("section",
@@ -97,6 +98,40 @@ export default async function (ctx) {
       h("p.klein.leise", { style: { margin: ".6rem 0 0" } }, p.regel));
   }
 
+  function abgabenAnsicht(du) {
+    return h("div.abgaben", abgabenListe.map((ab) => {
+      const akt = aktivitaet(ab.aktivitaet);
+      const bewertet = ab.bewertung != null;
+      return h("details.flaeche", { open: !du && !bewertet },
+        h("summary.reihe.zwischen", { style: { cursor: "pointer" } },
+          h("span", h("b", (akt ? akt.titel : ab.aktivitaet) + ": " + ab.aufgabe), h("span.klein.leise", `  ${ab.woerter} Wörter, ${seit(ab.ts)}`)),
+          bewertet ? h("span.chip." + (ab.bewertung / ab.max >= 0.75 ? "gut" : ab.bewertung / ab.max >= 0.35 ? "mittel" : "schlecht"), `${ab.bewertung} von ${ab.max} Punkten`) : h("span.chip.mittel", "noch nicht bewertet")),
+        ab.situation ? h("p.klein.leise", ab.situation) : null,
+        h("div.pr-abgabe", ab.text),
+        ab.kommentar ? h("p", h("b", "Kommentar: "), ab.kommentar) : null,
+        !du ? bewertungsForm(ab) : null);
+    }));
+  }
+  function bewertungsForm(ab) {
+    const max = 20;
+    const kriterien = ["Aufgabe erfüllt (Leitpunkte)", "Kommunikative Gestaltung", "Korrektheit", "Wortschatz"];
+    const sel = kriterien.map((k) => h("label.feld", k, h("select", [5, 4, 3, 2, 1, 0].map((p) => h("option", { value: p }, `${p} Punkte`)))));
+    const komm = h("textarea", { rows: 2, placeholder: "Kurzer Kommentar (optional)" }, ab.kommentar || "");
+    return h("form.formular", { style: { marginTop: "1rem" }, onsubmit: async (e) => {
+      e.preventDefault();
+      const punkte = sel.reduce((s, l) => s + Number(l.querySelector("select").value), 0);
+      const akt = aktivitaet(ab.aktivitaet);
+      await store.update("", {
+        [`${S}/abgaben/${stid}/${ab.id}/bewertung`]: punkte, [`${S}/abgaben/${stid}/${ab.id}/max`]: max,
+        [`${S}/abgaben/${stid}/${ab.id}/kommentar`]: komm.value.trim() || null,
+        [`${S}/ergebnisse/${stid}/a_${ab.id}`]: { aktivitaet: ab.aktivitaet, modul: "bewertet", fertigkeit: (akt && akt.fertigkeit) || "schreiben", punkte, max, ts: ab.ts, bewertetVon: session.name },
+      });
+      toast(`Bewertet: ${punkte} von ${max} Punkten`);
+    } },
+      h("div.spalten-2", sel), komm,
+      h("div.reihe", h("button.btn.primaer", { type: "submit" }, ab.bewertung != null ? "Bewertung ändern" : "Bewerten"), h("span.klein.leise", "Kriterien wie im DTZ: je 0–5 Punkte. Die Punkte fließen in die Prognose ein.")));
+  }
+
   function rueckmeldung(du) {
     const r = rm || {};
     if (du) {
@@ -128,6 +163,12 @@ export default async function (ctx) {
     tage.forEach((t, i) => { if (werte[i]) anwKlasse[t] = { [stid]: werte[i] }; });
     zeichne();
   }
+  ctx.on(`${S}/abgaben/${stid}`, (v) => {
+    abgabenListe = Object.entries(v || {}).map(([id, x]) => ({ id, ...x })).sort((a, b) => b.ts - a.ts);
+    const ae = document.activeElement;
+    if (ae && box.contains(ae) && /TEXTAREA|SELECT/.test(ae.tagName)) return;
+    zeichne();
+  });
   ctx.on(`${S}/rueckmeldung/${stid}`, (v) => {
     rm = v;
     const ae = document.activeElement;
