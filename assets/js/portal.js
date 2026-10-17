@@ -94,12 +94,11 @@ function anmeldung(store, session) {
 
   const zugaenge = APP.demoZugaenge ? h("div.zugaenge",
     h("h3", "Zum Ausprobieren"),
-    zugang("Schulleitung", `${DEMO.lehrkraefte[0].email}`, () => { setze("lk"); formLk.email.value = DEMO.lehrkraefte[0].email; formLk.pw.value = DEMO.lehrkraefte[0].pw; formLk.requestSubmit(); }),
-    zugang("Lehrkraft", `${DEMO.lehrkraefte[1].email}`, () => { setze("lk"); formLk.email.value = DEMO.lehrkraefte[1].email; formLk.pw.value = DEMO.lehrkraefte[1].pw; formLk.requestSubmit(); }),
+    DEMO.lehrkraefte.map((l) => zugang(`Lehrkraft (${l.name})`, l.email, () => { setze("lk"); formLk.email.value = l.email; formLk.pw.value = l.pw; formLk.requestSubmit(); })),
     zugang("Lernende:r im Integrationskurs", "Code " + DEMO.gastCodes.ik, () => { setze("tn"); formTn.code.value = DEMO.gastCodes.ik; formTn.requestSubmit(); }),
     zugang("Lernende:r im Wochenendkurs (A2)", "Code " + DEMO.gastCodes.we, () => { setze("tn"); formTn.code.value = DEMO.gastCodes.we; formTn.requestSubmit(); }),
     zugang("Lernende:r im Berufssprachkurs", "Code " + DEMO.gastCodes.bsk, () => { setze("tn"); formTn.code.value = DEMO.gastCodes.bsk; formTn.requestSubmit(); }),
-    h("p.klein.sehr-leise", { style: { margin: ".6rem 0 0" } }, `Passwort für beide Lehrkräfte: ${DEMO.lehrkraefte[0].pw}`)) : null;
+    h("p.klein.sehr-leise", { style: { margin: ".6rem 0 0" } }, `Passwort für alle Lehrkraft-Zugänge: ${DEMO.lehrkraefte[0].pw}`)) : null;
 
   mount(box, h("h2#anm-titel", "Anmelden"), h("div.wahl", { role: "tablist" }, tabTn, tabLk), formWrap, fehler, zugaenge);
   return box;

@@ -22,34 +22,38 @@ async function konto(store, l) {
 
 async function einrichten() {
   const store = await getStore();
-  const [leitung, lehrkraft] = DEMO.lehrkraefte;
+  const [erste, ...weitere] = DEMO.lehrkraefte;
   const sid = DEMO.schoolId;
+  const uids = {};
 
-  schreib("Melde Schulleitung an …");
-  const uidL = await konto(store, leitung);
-  if (!(await store.get("users/" + uidL))) {
-    await store.set("users/" + uidL, { schoolId: sid, name: leitung.name, email: leitung.email, rolle: "admin" });
-    schreib("Schulleitung angelegt.", "ok");
-  } else schreib("Schulleitung gab es schon.", "ok");
+  schreib(`Melde ${erste.name} an …`);
+  uids[erste.uid] = await konto(store, erste);
+  if (!(await store.get("users/" + uids[erste.uid]))) {
+    await store.set("users/" + uids[erste.uid], { schoolId: sid, name: erste.name, email: erste.email, rolle: "admin" });
+    schreib(`${erste.name} angelegt.`, "ok");
+  } else schreib(`${erste.name} gab es schon.`, "ok");
   if (!(await store.get(`schools/${sid}/meta`))) await store.set(`schools/${sid}/meta`, { name: DEMO.schule, erstellt: Date.now(), demo: true });
-  await store.set(`schools/${sid}/einladungen/${mailKey(lehrkraft.email)}`, { rolle: "lehrkraft", von: uidL });
+  for (const l of weitere) await store.set(`schools/${sid}/einladungen/${mailKey(l.email)}`, { rolle: "lehrkraft", von: uids[erste.uid] });
   await store.auth.signOut();
 
-  schreib("Melde zweite Lehrkraft an …");
-  const uidT = await konto(store, lehrkraft);
-  if (!(await store.get("users/" + uidT))) {
-    await store.set("users/" + uidT, { schoolId: sid, name: lehrkraft.name, email: lehrkraft.email, rolle: "lehrkraft" });
-    schreib("Lehrkraft angelegt.", "ok");
-  } else schreib("Lehrkraft gab es schon.", "ok");
-  await store.auth.signOut();
+  for (const l of weitere) {
+    schreib(`Melde ${l.name} an …`);
+    uids[l.uid] = await konto(store, l);
+    if (!(await store.get("users/" + uids[l.uid]))) {
+      await store.set("users/" + uids[l.uid], { schoolId: sid, name: l.name, email: l.email, rolle: "lehrkraft" });
+      schreib(`${l.name} angelegt.`, "ok");
+    } else schreib(`${l.name} gab es schon.`, "ok");
+    await store.auth.signOut();
+  }
 
-  await store.auth.signIn(leitung.email, leitung.pw);
+  await store.auth.signIn(erste.email, erste.pw);
   schreib("Schreibe Beispieldaten …");
-  // alte Bewegungsdaten entfernen, damit nichts Veraltetes stehen bleibt
-  for (const teil of ["klassen", "students", "klassenbuch", "anwesenheit", "ergebnisse", "rueckmeldung"]) await store.remove(`schools/${sid}/${teil}`);
-  const ersetzen = (text) => text.replaceAll("u_demo_leitung", uidL).replaceAll("u_demo_lehrkraft", uidT);
-  const daten = JSON.parse(ersetzen(JSON.stringify(demoDaten())));
-  const eintraege = Object.entries(daten).filter(([p]) => !p.startsWith("users/") && p !== `schools/${sid}/meta`);
+  for (const teil of ["klassen", "students", "klassenbuch", "anwesenheit", "ergebnisse", "rueckmeldung", "abgaben", "karteikasten", "live"]) await store.remove(`schools/${sid}/${teil}`);
+  for (const l of DEMO.lehrkraefte) await store.set(`schools/${sid}/teachers/${uids[l.uid]}`, { name: l.name, email: l.email, rolle: l.rolle });
+  let text = JSON.stringify(demoDaten());
+  for (const [platzhalter, echt] of Object.entries(uids)) text = text.replaceAll(platzhalter, echt);
+  const daten = JSON.parse(text);
+  const eintraege = Object.entries(daten).filter(([p]) => !p.startsWith("users/") && p !== `schools/${sid}/meta` && !p.startsWith(`schools/${sid}/teachers/`));
   for (let i = 0; i < eintraege.length; i += 400) {
     await store.update("", Object.fromEntries(eintraege.slice(i, i + 400)));
     schreib(`${Math.min(i + 400, eintraege.length)} von ${eintraege.length} Einträgen`);
@@ -68,7 +72,7 @@ function start() {
     h("main.seite", { style: { maxWidth: "720px", padding: "2rem 1rem" } },
       h("h1", "Demo-Schule einrichten"),
       FIREBASE_CONFIG
-        ? [h("p", "Legt die beiden Lehrkraft-Konten an und schreibt Klassen, Lernende, Klassenbuch und Ergebnisse neu, mit Daten bis gestern. Bestehende Demo-Daten werden ersetzt."), knopf]
+        ? [h("p", "Legt die drei Lehrkraft-Konten (Demo 1–3) an und schreibt Klassen, Lernende, Klassenbuch und Ergebnisse neu, mit Daten bis gestern. Bestehende Demo-Daten werden ersetzt."), knopf]
         : h("p", "Es ist noch keine Firebase-Konfiguration eingetragen (assets/js/config.js). Im Demo-Modus legt die Startseite die Beispieldaten automatisch an."),
       log,
       h("p", h("a", { href: "index.html" }, "Zur Startseite"))));

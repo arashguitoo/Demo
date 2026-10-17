@@ -95,7 +95,7 @@ async function start() {
     }),
     h("div.nav-fuss",
       h("div.wer", h("div.avatar", (session.name || "?").slice(0, 1)),
-        h("div", h("div.wer-name", session.name), h("div.wer-rolle", session.rolle === "lehrkraft" ? (session.admin ? "Schulleitung" : "Lehrkraft") : "Code " + session.code))),
+        h("div", h("div.wer-name", session.name), h("div.wer-rolle", session.rolle === "lehrkraft" ? "Lehrkraft" : "Code " + session.code))),
       h("button.btn.leicht.klein", { style: { justifyContent: "flex-start" }, onclick: async () => { await logout(); location.replace("index.html"); } }, icon("logout", 18), "Abmelden"),
       autorZeile()));
 

@@ -183,6 +183,14 @@ async function createFirebase(cfg) {
 
 let storePromise = null;
 export function getStore() {
-  if (!storePromise) storePromise = FIREBASE_CONFIG ? createFirebase(FIREBASE_CONFIG) : Promise.resolve(createLocal());
+  if (!storePromise) {
+    // ?demo im Link erzwingt den Demo-Modus im Browser (zum Testen ohne Firebase), gilt für diesen Tab
+    let demo = false;
+    try {
+      if (new URLSearchParams(location.search).has("demo")) sessionStorage.setItem("sh_demo", "1");
+      demo = sessionStorage.getItem("sh_demo") === "1";
+    } catch (e) { /* egal */ }
+    storePromise = FIREBASE_CONFIG && !demo ? createFirebase(FIREBASE_CONFIG) : Promise.resolve(createLocal());
+  }
   return storePromise;
 }

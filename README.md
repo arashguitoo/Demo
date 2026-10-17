@@ -27,8 +27,7 @@ Konzept & Inhalte: Arash Guitoo
 
 | Rolle | Zugang |
 |---|---|
-| Schulleitung | leitung@demo.de / hafen2026 |
-| Lehrkraft | lehrkraft@demo.de / hafen2026 |
+| Lehrkraft Demo 1–3 | demo1@sprachhafen.de, demo2@…, demo3@… / hafen2026 |
 | Lernende (Integrationskurs, Wochenendkurs, BSK) | Codes GASTA2, GASTC2, GASTB2 |
 
 ## Datenmodell (Realtime Database)

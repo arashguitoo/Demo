@@ -1,7 +1,7 @@
 /* Demo-Modus: Beispielschule einmalig im Browser anlegen */
 import { demoDaten, DEMO } from "../data/demo-daten.js";
 
-const VERSION = 4;
+const VERSION = 5;
 
 export async function sichereDemo(store) {
   if (store.mode !== "demo") return;

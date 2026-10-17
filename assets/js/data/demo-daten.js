@@ -8,11 +8,13 @@ import { isoTag } from "../core/ui.js";
 import { unterrichtstage } from "../core/auswertung.js";
 
 export const DEMO = {
-  schoolId: "s_demo",
+  schoolId: "s_sprachhafen",
   schule: "Sprachschule am Hafen (Demo)",
   lehrkraefte: [
-    { uid: "u_demo_leitung", name: "Lena Hoffmann", email: "leitung@demo.de", pw: "hafen2026", rolle: "admin" },
-    { uid: "u_demo_lehrkraft", name: "Jonas Weber", email: "lehrkraft@demo.de", pw: "hafen2026", rolle: "lehrkraft" },
+    // Drei gleichwertige Lehrkraft-Zugänge. Der erste legt technisch die Schule an (Rolle admin).
+    { uid: "u_demo_1", name: "Demo 1", email: "demo1@sprachhafen.de", pw: "hafen2026", rolle: "admin" },
+    { uid: "u_demo_2", name: "Demo 2", email: "demo2@sprachhafen.de", pw: "hafen2026", rolle: "lehrkraft" },
+    { uid: "u_demo_3", name: "Demo 3", email: "demo3@sprachhafen.de", pw: "hafen2026", rolle: "lehrkraft" },
   ],
   gastCodes: { ik: "GASTA2", bsk: "GASTB2", we: "GASTC2" },
 };
@@ -39,9 +41,9 @@ export function demoDaten() {
   }
 
   const klassen = {
-    k_ik: { name: "Integrationskurs Modul 6", niveau: "B1", kursart: "Integrationskurs", pruefung: "DTZ", start: vor(54), ende: nach(26), tage: [1, 2, 3, 4, 5], zeit: "08:30–12:45", raum: "Raum 2", lehrkraefte: { u_demo_lehrkraft: true }, erstellt: Date.now() },
-    k_we: { name: "Wochenendkurs A2", niveau: "A2", kursart: "Allgemeiner Sprachkurs", pruefung: "DTZ", start: vor(40), ende: nach(60), tage: [6, 0], zeit: "10:00–13:15", raum: "Raum 1", lehrkraefte: { u_demo_lehrkraft: true }, erstellt: Date.now() },
-    k_bsk: { name: "Berufssprachkurs B2", niveau: "B2", kursart: "Berufssprachkurs (BSK)", pruefung: "DTB", start: vor(68), ende: nach(40), tage: [1, 2, 4], zeit: "17:30–20:45", raum: "Raum 5", lehrkraefte: { u_demo_leitung: true, u_demo_lehrkraft: true }, erstellt: Date.now() },
+    k_ik: { name: "Integrationskurs Modul 6", niveau: "B1", kursart: "Integrationskurs", pruefung: "DTZ", start: vor(54), ende: nach(26), tage: [1, 2, 3, 4, 5], zeit: "08:30–12:45", raum: "Raum 2", lehrkraefte: { u_demo_1: true, u_demo_2: true, u_demo_3: true }, erstellt: Date.now() },
+    k_we: { name: "Wochenendkurs A2", niveau: "A2", kursart: "Allgemeiner Sprachkurs", pruefung: "DTZ", start: vor(40), ende: nach(60), tage: [6, 0], zeit: "10:00–13:15", raum: "Raum 1", lehrkraefte: { u_demo_1: true, u_demo_2: true, u_demo_3: true }, erstellt: Date.now() },
+    k_bsk: { name: "Berufssprachkurs B2", niveau: "B2", kursart: "Berufssprachkurs (BSK)", pruefung: "DTB", start: vor(68), ende: nach(40), tage: [1, 2, 4], zeit: "17:30–20:45", raum: "Raum 5", lehrkraefte: { u_demo_1: true, u_demo_2: true, u_demo_3: true }, erstellt: Date.now() },
   };
   for (const [k, v] of Object.entries(klassen)) out[`${S}/klassen/${k}`] = v;
 
@@ -88,7 +90,7 @@ export function demoDaten() {
     const tage = unterrichtstage(kl, buch, gestern);
     const themen = istB2 ? themenBSK : kid === "k_we" ? themenIK.slice().reverse() : themenIK;
     tage.forEach((t, i) => {
-      buch[t] = { unterricht: true, thema: themen[i % themen.length], hausaufgabe: pick(hausaufgaben), ue: istB2 ? 4 : 5, lehrkraft: istB2 && i % 2 ? "u_demo_leitung" : "u_demo_lehrkraft" };
+      buch[t] = { unterricht: true, thema: themen[i % themen.length], hausaufgabe: pick(hausaufgaben), ue: istB2 ? 4 : 5, lehrkraft: "u_demo_" + (1 + (i % 3)) };
       for (const [stid, p] of Object.entries(studenten)) {
         if (p.kid !== kid) continue;
         const x = r();
@@ -143,8 +145,8 @@ export function demoDaten() {
   }
 
   // Rückmeldungen der Lehrkraft (für zwei TN schon ausgefüllt)
-  out[`${S}/rueckmeldung/t_k_ik_1`] = { staerken: "Liest sehr genau und findet Informationen schnell. Beteiligt sich viel im Unterricht.", ziele: "Im Schreiben alle vier Leitpunkte bearbeiten und Anrede und Gruß nicht vergessen.", aktualisiert: Date.now() - 3 * 864e5, von: "Jonas Weber" };
-  out[`${S}/rueckmeldung/t_k_bsk_1`] = { staerken: "Sicher in Pausengesprächen, guter Berufswortschatz.", ziele: "Sprachbausteine: Konnektoren mit Nebensatz wiederholen (obwohl, sodass, indem).", aktualisiert: Date.now() - 5 * 864e5, von: "Lena Hoffmann" };
+  out[`${S}/rueckmeldung/t_k_ik_1`] = { staerken: "Liest sehr genau und findet Informationen schnell. Beteiligt sich viel im Unterricht.", ziele: "Im Schreiben alle vier Leitpunkte bearbeiten und Anrede und Gruß nicht vergessen.", aktualisiert: Date.now() - 3 * 864e5, von: "Demo 1" };
+  out[`${S}/rueckmeldung/t_k_bsk_1`] = { staerken: "Sicher in Pausengesprächen, guter Berufswortschatz.", ziele: "Sprachbausteine: Konnektoren mit Nebensatz wiederholen (obwohl, sodass, indem).", aktualisiert: Date.now() - 5 * 864e5, von: "Demo 2" };
 
   return out;
 }
