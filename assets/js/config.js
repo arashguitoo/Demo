@@ -14,7 +14,15 @@ export const APP = {
 
 /* Firebase-Web-Config hier eintragen. Solange `null`, läuft die
    Plattform im Demo-Modus: alle Daten liegen nur in diesem Browser. */
-export const FIREBASE_CONFIG = null;
+export const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDTn3qDY8XIullqxl6Uez3TIfqENivlGPg",
+  authDomain: "deutsch-88bf3.firebaseapp.com",
+  databaseURL: "https://deutsch-88bf3-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "deutsch-88bf3",
+  storageBucket: "deutsch-88bf3.firebasestorage.app",
+  messagingSenderId: "1067135067521",
+  appId: "1:1067135067521:web:181a8d37f289b2914ab480",
+};
 /* Beispiel:
 export const FIREBASE_CONFIG = {
   apiKey: "…",
