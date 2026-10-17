@@ -67,6 +67,7 @@ regeln = {
         "live": {
           ".read": f"auth != null && ({LK} || {TN})",
           "$raum": {
+            "meta": {".write": f"{TN} && (!data.exists() || data.child('von').val() === auth.uid)"},
             "spieler": {"$uid": {".write": f"{TN} && auth.uid === $uid"}},
             "antworten": {"$frage": {"$uid": {".write": f"{TN} && auth.uid === $uid && !data.exists()"}}},
             "chat": {"$nid": {".write": f"{TN} && !data.exists()"}},

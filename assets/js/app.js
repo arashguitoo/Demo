@@ -40,11 +40,19 @@ const ROUTEN = [
   { rolle: "lehrkraft", muster: "/tn/:stid", view: () => import("./views/feedback.js") },
   { rolle: "lehrkraft", muster: "/inhalte", view: () => import("./views/bereiche.js") },
   { rolle: "lehrkraft", muster: "/bereich/:bid", view: () => import("./views/bereiche.js") },
-  { rolle: "lehrkraft", muster: "/live", view: () => import("./views/bald.js") },
+  { rolle: "lehrkraft", muster: "/live", view: () => import("./views/live-lk.js") },
   // Lernende
   { rolle: "tn", muster: "/", view: () => import("./views/tn/start.js") },
   { rolle: "tn", muster: "/bereich/:bid", view: () => import("./views/bereiche.js") },
   { rolle: "tn", muster: "/fortschritt", view: () => import("./views/feedback.js") },
+  // beide Rollen (Lehrkräfte sehen eine Vorschau)
+  { rolle: "*", muster: "/paket/:aid", view: () => import("./views/paket.js") },
+  { rolle: "*", muster: "/spiel/:aid/:mid", view: () => import("./views/spiel.js") },
+  { rolle: "*", muster: "/karteikasten", view: () => import("./views/karteikasten.js") },
+  { rolle: "*", muster: "/chat/:aid", view: () => import("./views/chat.js") },
+  { rolle: "*", muster: "/pruefung/:aid", view: () => import("./views/pruefung.js") },
+  { rolle: "*", muster: "/jagd", view: () => import("./views/jagd.js") },
+  { rolle: "tn", muster: "/live", view: () => import("./views/live-tn.js") },
 ];
 
 function passt(muster, pfad) {
@@ -109,7 +117,7 @@ async function start() {
     appEl.classList.remove("nav-offen");
     const pfad = (location.hash || "#/").slice(1) || "/";
     let treffer = null, params = null;
-    for (const r of ROUTEN) { if (r.rolle !== session.rolle) continue; const p = passt(r.muster, pfad.split("?")[0]); if (p) { treffer = r; params = p; break; } }
+    for (const r of ROUTEN) { if (r.rolle !== session.rolle && r.rolle !== "*") continue; const p = passt(r.muster, pfad.split("?")[0]); if (p) { treffer = r; params = p; break; } }
     // aktiven Menüpunkt markieren (längster passender Präfix)
     let best = null;
     for (const a of links) { const ziel = a.getAttribute("href").slice(1); if (pfad === ziel || (ziel !== "/" && pfad.startsWith(ziel))) { if (!best || ziel.length > best.z.length) best = { a, z: ziel }; } }

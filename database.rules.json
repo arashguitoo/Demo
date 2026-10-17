@@ -80,6 +80,9 @@
         "live": {
           ".read": "auth != null && (root.child('users/' + auth.uid + '/schoolId').val() === $sid || (auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid))",
           "$raum": {
+            "meta": {
+              ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && (!data.exists() || data.child('von').val() === auth.uid)"
+            },
             "spieler": {
               "$uid": {
                 ".write": "(auth != null && root.child('sessions/' + auth.uid).child('schoolId').val() === $sid) && auth.uid === $uid"

@@ -87,8 +87,10 @@ function createLocal() {
   window.addEventListener("storage", (e) => { if (e.key === LS_KEY) refresh([""]); });
 
   /* Auth (Demo): Lehrkraft-Konten unter _auth, Sitzung im Browser */
-  function authLoad() { try { return JSON.parse(localStorage.getItem(LS_AUTH)) || null; } catch (e) { return null; } }
-  function authSave(v) { if (v) localStorage.setItem(LS_AUTH, JSON.stringify(v)); else localStorage.removeItem(LS_AUTH); }
+  /* Anmeldung pro Tab (sessionStorage): So können im Demo-Modus mehrere
+     Personen in verschiedenen Tabs desselben Browsers gegeneinander spielen. */
+  function authLoad() { try { return JSON.parse(sessionStorage.getItem(LS_AUTH)) || null; } catch (e) { return null; } }
+  function authSave(v) { try { if (v) sessionStorage.setItem(LS_AUTH, JSON.stringify(v)); else sessionStorage.removeItem(LS_AUTH); } catch (e) { /* privat */ } }
   const mailKey = (m) => String(m).trim().toLowerCase().replace(/[.#$\[\]\/]/g, "_");
 
   return {
@@ -132,7 +134,7 @@ function createLocal() {
       /* nur Demo: Konto direkt anlegen (für Beispieldaten) */
       _seedAccount(email, pw, uid) { write("_auth/" + mailKey(email), { uid, pw }); },
     },
-    _resetAll() { localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_AUTH); tree = {}; },
+    _resetAll() { localStorage.removeItem(LS_KEY); sessionStorage.removeItem(LS_AUTH); tree = {}; },
     _commitSeed() { commit([""]); },
     _tree: () => tree,
     _write: (p, v) => write(p, v),

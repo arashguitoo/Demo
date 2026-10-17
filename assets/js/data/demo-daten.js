@@ -76,7 +76,7 @@ export function demoDaten() {
     // Gast-Zugang für Besucher:innen
     const gid = `t_${kid}_gast`;
     const gc = istB2 ? DEMO.gastCodes.bsk : kid === "k_we" ? DEMO.gastCodes.we : DEMO.gastCodes.ik;
-    out[`${S}/students/${gid}`] = { vorname: "Gast", klasseId: kid, code: gc, aktiv: true, erstellt: Date.now(), gast: true };
+    out[`${S}/students/${gid}`] = { vorname: istB2 ? "Sam" : kid === "k_we" ? "Kim" : "Alex", klasseId: kid, code: gc, aktiv: true, erstellt: Date.now(), gast: true };
     out[`codes/${gc}`] = { schoolId: DEMO.schoolId, studentId: gid };
 
     // Klassenbuch + Anwesenheit

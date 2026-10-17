@@ -1,6 +1,7 @@
 /* Bereiche und Aktivitäten (für Lernende und Lehrkräfte) */
 import { h, icon, mount } from "../core/ui.js";
 import { BEREICHE, AKTIVITAETEN, NIVEAUS, FERTIGKEITEN, bereich as findeBereich } from "../data/katalog.js";
+import { pruefeVerfuegbar, route } from "../data/inhalte/index.js";
 
 export default async function (ctx) {
   const { store, session, params } = ctx;
@@ -21,6 +22,7 @@ export default async function (ctx) {
   let eigenesNiveau = null;
   if (!istLk) { const k = await store.get(ctx.schule(`klassen/${session.klasseId}`)); eigenesNiveau = k ? k.niveau : null; }
   const akts = AKTIVITAETEN.filter((a) => a.bereich === b.id);
+  const istBereit = await pruefeVerfuegbar(akts.map((a) => a.id));
   const ordnung = eigenesNiveau ? [eigenesNiveau, ...NIVEAUS.filter((n) => n !== eigenesNiveau)] : NIVEAUS;
 
   ctx.render(
@@ -32,13 +34,13 @@ export default async function (ctx) {
       return h("section.abschnitt",
         h("h2.reihe", { style: { gap: ".5rem" } }, h("span.niveau." + n, n), n === eigenesNiveau ? "Dein Niveau" : `Niveau ${n}`),
         h("div.akt-liste", liste.map((a) => {
-          const bereit = a.status === "bereit";
+          const bereit = istBereit(a.id);
           const inhalt = [
             h("div.akt-kopf", h("strong", a.titel), a.pruefung ? h("span.chip.petrol", a.pruefung) : null),
             h("p", a.text),
             h("div.akt-fuss", h("span", FERTIGKEITEN[a.fertigkeit]), h("span", `ca. ${a.dauer} Min.`), bereit ? h("span.akt-los", "Starten", icon("arrowR", 18)) : h("span.chip", "In Arbeit")),
           ];
-          return bereit ? h("a.akt", { href: a.route || "#/spiel/" + a.id }, inhalt) : h("div.akt.bald", { "aria-disabled": "true" }, inhalt);
+          return bereit ? h("a.akt", { href: route(a.id) }, inhalt) : h("div.akt.bald", { "aria-disabled": "true" }, inhalt);
         })));
     }));
 }
