@@ -160,6 +160,8 @@ async function createFirebase(cfg) {
     if (c.includes("weak-password")) return "Das Passwort braucht mindestens 6 Zeichen.";
     if (c.includes("too-many-requests")) return "Zu viele Versuche. Bitte kurz warten.";
     if (c.includes("network")) return "Keine Verbindung. Bitte Internet prüfen.";
+    if (c.includes("admin-restricted-operation") || c.includes("operation-not-allowed")) return "Diese Anmeldeart ist im Firebase-Projekt noch nicht freigeschaltet (Authentication → Anmeldemethode: „Anonym“ bzw. „E-Mail/Passwort“ aktivieren).";
+    if (c.includes("PERMISSION_DENIED") || /permission/i.test(e && e.message)) return "Zugriff verweigert. Sind die Sicherheitsregeln veröffentlicht?";
     return (e && e.message) || "Unbekannter Fehler.";
   };
   return {
