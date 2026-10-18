@@ -1,7 +1,7 @@
 /* Startportal: Vorstellung + Anmeldung */
 import { APP } from "./config.js";
 import { getStore } from "./core/store.js";
-import { currentSession, loginCode, loginLehrkraft, logout } from "./core/session.js";
+import { currentSession, loginCode, loginLehrkraft, logout, sitzungsFehler } from "./core/session.js";
 import { h, mount, icon } from "./core/ui.js";
 import { marke } from "./core/marke.js";
 import { BEREICHE } from "./data/katalog.js";
@@ -54,6 +54,7 @@ function buehne() {
 
 function anmeldung(store, session) {
   const box = h("section.anmeldung", { id: "anmelden", "aria-labelledby": "anm-titel" });
+  const startFehler = sitzungsFehler;
   if (session) {
     mount(box, h("div.angemeldet",
       h("h2#anm-titel", `Hallo ${session.name}!`),
@@ -63,7 +64,7 @@ function anmeldung(store, session) {
     return box;
   }
   let modus = "tn";
-  const fehler = h("p.fehler-text", { role: "alert" });
+  const fehler = h("p.fehler-text", { role: "alert" }, startFehler || "");
   const formTn = h("form.formular", { onsubmit: async (e) => {
     e.preventDefault(); fehler.textContent = "";
     const btn = formTn.querySelector("button"); btn.disabled = true;
@@ -86,7 +87,7 @@ function anmeldung(store, session) {
   const tabTn = h("button", { type: "button", role: "tab", "aria-selected": "true", onclick: () => setze("tn") }, "Ich lerne");
   const tabLk = h("button", { type: "button", role: "tab", "aria-selected": "false", onclick: () => setze("lk") }, "Ich unterrichte");
   function setze(m) {
-    modus = m; fehler.textContent = "";
+    modus = m; if (modus !== "tn" || fehler.dataset.gesehen) fehler.textContent = ""; fehler.dataset.gesehen = "1";
     tabTn.setAttribute("aria-selected", String(m === "tn")); tabLk.setAttribute("aria-selected", String(m === "lk"));
     mount(formWrap, m === "tn" ? formTn : formLk);
   }
@@ -106,9 +107,16 @@ function anmeldung(store, session) {
 const zugang = (wer, was, los) => h("div.zugang", h("div", h("b", wer), h("span", was)), h("button.btn.klein", { type: "button", onclick: los }, "Öffnen"));
 
 async function start() {
-  const store = await getStore();
+  let store;
+  try { store = await getStore(); }
+  catch (e) {
+    console.error(e);
+    document.getElementById("portal").textContent = "Die Verbindung zur Datenbank konnte nicht hergestellt werden. Bitte Seite neu laden.";
+    return;
+  }
   if (store.mode === "demo") await sichereDemo(store);
-  const session = await currentSession();
+  let session = null;
+  try { session = await currentSession(); } catch (e) { console.error(e); }
   document.title = `${APP.name} – Deutsch üben von A1 bis B2`;
 
   mount(document.getElementById("portal"),

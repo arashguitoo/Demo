@@ -18,7 +18,24 @@ export const normCode = (c) => String(c || "").toUpperCase().replace(/[^A-Z0-9]/
 
 let cached = null;
 
+/** Letzter Fehler beim Prüfen der Sitzung (z. B. Regeln nicht veröffentlicht) */
+export let sitzungsFehler = null;
+
 export async function currentSession() {
+  try {
+    sitzungsFehler = null;
+    return await sitzungLaden();
+  } catch (e) {
+    console.error("Sitzung prüfen fehlgeschlagen:", e);
+    sitzungsFehler = /permission|denied/i.test(e && (e.code || e.message)) ? "Die Datenbank verweigert den Zugriff. Sind die Sicherheitsregeln in Firebase veröffentlicht?" : (e && e.message) || String(e);
+    // kaputte Anmeldung verwerfen, damit die Startseite wieder benutzbar ist
+    try { (await getStore()).auth.signOut(); } catch (x) { /* egal */ }
+    cached = null;
+    return null;
+  }
+}
+
+async function sitzungLaden() {
   if (cached) return cached;
   const store = await getStore();
   const uid = await store.auth.ready();
@@ -52,7 +69,9 @@ export async function loginCode(rawCode) {
   if (code.length < 4) throw new Error("Bitte den ganzen Code eingeben.");
   const store = await getStore();
   const uid = await store.auth.signInAnon();
-  const hit = await store.get("codes/" + code);
+  let hit;
+  try { hit = await store.get("codes/" + code); }
+  catch (e) { throw new Error(/permission|denied/i.test(e.code || e.message) ? "Die Datenbank verweigert den Zugriff. Sind die Sicherheitsregeln in Firebase veröffentlicht?" : e.message); }
   if (!hit) throw new Error("Diesen Code gibt es nicht. Bitte noch einmal prüfen.");
   await store.set("sessions/" + uid, { schoolId: hit.schoolId, studentId: hit.studentId, code, ts: Date.now() });
   cached = null;
