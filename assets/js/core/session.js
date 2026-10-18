@@ -61,7 +61,9 @@ export async function loginLehrkraft(email, pw) {
   const user = await store.get("users/" + uid);
   if (!user || !user.schoolId) { await store.auth.signOut(); throw new Error("Dieses Konto gehört zu keiner Schule."); }
   cached = null;
-  return currentSession();
+  const s = await currentSession();
+  if (!s) throw new Error(sitzungsFehler || "Anmeldung fehlgeschlagen.");
+  return s;
 }
 
 export async function loginCode(rawCode) {
@@ -76,7 +78,7 @@ export async function loginCode(rawCode) {
   await store.set("sessions/" + uid, { schoolId: hit.schoolId, studentId: hit.studentId, code, ts: Date.now() });
   cached = null;
   const s = await currentSession();
-  if (!s) throw new Error("Dieser Code ist nicht mehr aktiv. Bitte die Lehrkraft fragen.");
+  if (!s) throw new Error(sitzungsFehler || "Dieser Code ist nicht mehr aktiv. Bitte die Lehrkraft fragen.");
   return s;
 }
 
@@ -91,7 +93,9 @@ export async function schuleAnlegen({ schule, name, email, pw }) {
     ["teachers/" + uid]: { name, email: email.trim(), rolle: "admin" },
   });
   cached = null;
-  return currentSession();
+  const s = await currentSession();
+  if (!s) throw new Error(sitzungsFehler || "Anmeldung fehlgeschlagen.");
+  return s;
 }
 
 export async function logout() {
